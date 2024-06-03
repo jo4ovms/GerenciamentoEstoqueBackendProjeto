@@ -1,4 +1,4 @@
-package com.cadastro1.demo.config;
+package com.cadastro1.demo.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
