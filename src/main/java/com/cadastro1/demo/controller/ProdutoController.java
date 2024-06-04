@@ -16,6 +16,14 @@ public class ProdutoController {
     @Autowired
     private ProdutoService produtoService;
 
+    @GetMapping("/abaixo-da-quantidade-segura")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<List<Produto>> listarProdutosAbaixoDaQuantidadeSegura() {
+        List<Produto> produtos = produtoService.listarProdutosAbaixoDaQuantidadeSegura(5);
+        return ResponseEntity.ok(produtos);
+    }
+
+
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Produto> criarProduto(@RequestBody Produto produto) {

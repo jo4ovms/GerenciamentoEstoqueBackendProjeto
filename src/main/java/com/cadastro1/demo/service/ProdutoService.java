@@ -29,4 +29,7 @@ public class ProdutoService {
     public void deletar(Long id) {
         produtoRepository.deleteById(id);
     }
+    public List<Produto> listarProdutosAbaixoDaQuantidadeSegura(int quantidadeSegura) {
+        return produtoRepository.findByQuantidadeLessThan(quantidadeSegura);
+    }
 }
