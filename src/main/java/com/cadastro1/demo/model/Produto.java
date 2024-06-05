@@ -26,6 +26,11 @@ public class Produto {
     @Column(nullable = false)
     private String fornecedor;
 
+
+    @Override
+    public String toString(){
+        return nome;
+    }
     // Getters and Setters
     // ...
 }
