@@ -61,4 +61,13 @@ public class ProdutoService {
         return salesData;
     }
 
+    public List<Produto> listarProdutosForaDeEstoque() {
+        return produtoRepository.findByQuantidade(0);
+    }
+
+    public List<Produto> listarProdutosAdequados(int quantidadeSegura) {
+        return produtoRepository.findByQuantidadeGreaterThanEqual(quantidadeSegura);
+    }
+
+
 }

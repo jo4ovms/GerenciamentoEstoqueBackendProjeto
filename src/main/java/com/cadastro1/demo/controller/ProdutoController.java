@@ -74,4 +74,18 @@ public class ProdutoController {
         return ResponseEntity.ok(salesData);
     }
 
+
+    @GetMapping("/fora-de-estoque")
+    public ResponseEntity<List<Produto>> listarProdutosForaDeEstoque() {
+        List<Produto> produtos = produtoService.listarProdutosForaDeEstoque();
+        return ResponseEntity.ok(produtos);
+    }
+
+    @GetMapping("/adequados")
+    public ResponseEntity<List<Produto>> listarProdutosAdequados() {
+        List<Produto> produtos = produtoService.listarProdutosAdequados(5);
+        return ResponseEntity.ok(produtos);
+    }
+
+
 }
