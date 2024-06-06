@@ -14,6 +14,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,5 +62,49 @@ public class VendaService {
                 .filter(venda -> !venda.getDataVenda().isBefore(startDate.atStartOfDay()) && !venda.getDataVenda().isAfter(endDate.atStartOfDay()))
                 .collect(Collectors.toList());
     }
+
+    public List<ProdutoQuantidade> listarItensMaisVendidos() {
+        Map<Long, Integer> vendasAgrupadas = vendaRepository.findAll().stream()
+                .collect(Collectors.groupingBy(Venda::getProdutoId, Collectors.summingInt(Venda::getQuantidade)));
+
+        return vendasAgrupadas.entrySet().stream()
+                .map(entry -> {
+                    Produto produto = produtoRepository.findById(entry.getKey()).orElse(null);
+                    if (produto != null) {
+                        return new ProdutoQuantidade(produto.getNome(), entry.getValue());
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .sorted((pq1, pq2) -> Integer.compare(pq2.getQuantidade(), pq1.getQuantidade()))
+                .collect(Collectors.toList());
     }
+
+    public static class ProdutoQuantidade {
+        private String produto;
+        private int quantidade;
+
+        public ProdutoQuantidade(String produto, int quantidade) {
+            this.produto = produto;
+            this.quantidade = quantidade;
+        }
+
+        // Getters e Setters
+        public String getProduto() {
+            return produto;
+        }
+
+        public void setProduto(String produto) {
+            this.produto = produto;
+        }
+
+        public int getQuantidade() {
+            return quantidade;
+        }
+
+        public void setQuantidade(int quantidade) {
+            this.quantidade = quantidade;
+        }
+    }
+}
 

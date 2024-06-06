@@ -26,4 +26,11 @@ public class VendaController {
         List<Venda> vendas = vendaService.listarVendasPorMes(month);
         return ResponseEntity.ok(vendas);
     }
+
+    @GetMapping("/itens-mais-vendidos")
+    public ResponseEntity<List<VendaService.ProdutoQuantidade>> getItensMaisVendidos() {
+        List<VendaService.ProdutoQuantidade> itensMaisVendidos = vendaService.listarItensMaisVendidos();
+        return ResponseEntity.ok(itensMaisVendidos);
+    }
+
 }
