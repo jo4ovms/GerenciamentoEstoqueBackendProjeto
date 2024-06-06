@@ -19,11 +19,13 @@ public class ProdutoService {
     @Autowired
     private LogService logService;
 
-
     public Produto salvar(Produto produto) {
+        boolean isNew = (produto.getId() == null);
         Produto savedProduto = produtoRepository.save(produto);
-        logService.salvar(new Log("Produto", "CREATE", "Produto criado: " + savedProduto.toString(), LocalDateTime.now()));
-        return produtoRepository.save(produto);
+        String action = isNew ? "CREATE" : "UPDATE";
+        String logMessage = isNew ? "Produto criado: " : "Produto atualizado: ";
+        logService.salvar(new Log("Produto", action, logMessage + savedProduto.getNome(), LocalDateTime.now()));
+        return savedProduto;
     }
 
     public List<Produto> listar() {
@@ -34,21 +36,15 @@ public class ProdutoService {
         return produtoRepository.findById(id);
     }
 
-    public Produto atualizar(Long id, Produto produto) {
-        Produto updatedProduto = produtoRepository.save(produto);
-        logService.salvar(new Log("Produto", "UPDATE", "Produto atualizado: " + updatedProduto.toString(), LocalDateTime.now()));
-        return updatedProduto;
-    }
-
     public void deletar(Long id) {
         Produto produto = produtoRepository.findById(id).orElseThrow();
         produtoRepository.deleteById(id);
-        logService.salvar(new Log("Produto", "DELETE", "Produto deletado: " + produto.toString(), LocalDateTime.now()));
+        logService.salvar(new Log("Produto", "DELETE", "Produto deletado: " + produto.getNome(), LocalDateTime.now()));
     }
+
     public List<Produto> listarProdutosAbaixoDaQuantidadeSegura(int quantidadeSegura) {
         return produtoRepository.findByQuantidadeLessThan(quantidadeSegura);
     }
-
 
     public List<Produto> listarProdutosForaDeEstoque() {
         return produtoRepository.findByQuantidade(0);
@@ -57,6 +53,4 @@ public class ProdutoService {
     public List<Produto> listarProdutosAdequados(int quantidadeSegura) {
         return produtoRepository.findByQuantidadeGreaterThanEqual(quantidadeSegura);
     }
-
-
 }

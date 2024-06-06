@@ -33,4 +33,10 @@ public class VendaController {
         return ResponseEntity.ok(itensMaisVendidos);
     }
 
+    @GetMapping
+    public ResponseEntity<List<Venda>> listarVendas() {
+        List<Venda> vendas = vendaService.listarVendas();
+        return ResponseEntity.ok(vendas);
+    }
+
 }

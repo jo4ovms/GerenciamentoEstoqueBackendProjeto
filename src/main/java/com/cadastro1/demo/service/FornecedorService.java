@@ -16,20 +16,16 @@ public class FornecedorService {
     @Autowired
     private FornecedorRepository fornecedorRepository;
 
-
     @Autowired
     private LogService logService;
 
     public Fornecedor salvar(Fornecedor fornecedor) {
+        boolean isNew = (fornecedor.getId() == null);
         Fornecedor savedFornecedor = fornecedorRepository.save(fornecedor);
-        logService.salvar(new Log("Fornecedor", "CREATE", "Fornecedor criado: " + savedFornecedor.getNome(), LocalDateTime.now()));
-        return fornecedorRepository.save(fornecedor);
-    }
-
-    public Fornecedor atualizar(Long id, Fornecedor fornecedor) {
-        Fornecedor updatedFornecedor = fornecedorRepository.save(fornecedor);
-        logService.salvar(new Log("Fornecedor", "UPDATE", "Fornecedor atualizado: " + updatedFornecedor.getNome(), LocalDateTime.now()));
-        return updatedFornecedor;
+        String action = isNew ? "CREATE" : "UPDATE";
+        String logMessage = isNew ? "Fornecedor criado: " : "Fornecedor atualizado: ";
+        logService.salvar(new Log("Fornecedor", action, logMessage + savedFornecedor.getNome(), LocalDateTime.now()));
+        return savedFornecedor;
     }
 
     public List<Fornecedor> listar() {
@@ -41,7 +37,8 @@ public class FornecedorService {
     }
 
     public void deletar(Long id) {
+        Fornecedor fornecedor = fornecedorRepository.findById(id).orElseThrow();
         fornecedorRepository.deleteById(id);
-        logService.salvar(new Log("Fornecedor", "DELETE", "Fornecedor deletado com id: " + id, LocalDateTime.now()));
+        logService.salvar(new Log("Fornecedor", "DELETE", "Fornecedor deletado: " + fornecedor.getNome(), LocalDateTime.now()));
     }
 }

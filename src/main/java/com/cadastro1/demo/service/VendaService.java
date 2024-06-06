@@ -80,6 +80,16 @@ public class VendaService {
                 .collect(Collectors.toList());
     }
 
+    public List<Venda> listarVendas() {
+        return vendaRepository.findAll();
+    }
+
+    public List<Venda> listarVendasPorData(LocalDateTime startDate, LocalDateTime endDate) {
+        return vendaRepository.findAll().stream()
+                .filter(venda -> !venda.getDataVenda().isBefore(startDate) && !venda.getDataVenda().isAfter(endDate))
+                .collect(Collectors.toList());
+    }
+
     public static class ProdutoQuantidade {
         private String produto;
         private int quantidade;
@@ -107,4 +117,3 @@ public class VendaService {
         }
     }
 }
-
