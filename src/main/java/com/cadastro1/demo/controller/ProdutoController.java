@@ -1,6 +1,7 @@
 package com.cadastro1.demo.controller;
 
 import com.cadastro1.demo.model.Produto;
+import com.cadastro1.demo.model.SalesData;
 import com.cadastro1.demo.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -66,4 +67,11 @@ public class ProdutoController {
         produtoService.deletar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/sales-data")
+    public ResponseEntity<List<SalesData>> getSalesData(@RequestParam int month) {
+        List<SalesData> salesData = produtoService.getSalesData(month);
+        return ResponseEntity.ok(salesData);
+    }
+
 }
