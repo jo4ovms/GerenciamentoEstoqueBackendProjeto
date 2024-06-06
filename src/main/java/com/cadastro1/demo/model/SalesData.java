@@ -5,12 +5,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
+
 public class SalesData {
-    private String date;
+
+    private int day;
     private int sales;
 
-    public SalesData(String date, int sales) {
-        this.date = date;
+    public SalesData(int day, int sales) {
+        this.day = day;
         this.sales = sales;
     }
 }
