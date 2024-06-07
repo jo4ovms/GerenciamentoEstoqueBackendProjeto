@@ -27,6 +27,9 @@ public class VendaService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    @Autowired
+    private LogService logService;
+
     public Venda registrarVenda(Venda venda) {
         Produto produto = produtoRepository.findById(venda.getProdutoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Produto not found for this id :: " + venda.getProdutoId()));
@@ -39,7 +42,9 @@ public class VendaService {
         produtoRepository.save(produto);
 
         venda.setDataVenda(LocalDateTime.now());
-        return vendaRepository.save(venda);
+        Venda novaVenda = vendaRepository.save(venda);
+        logService.logCreateVenda(novaVenda);
+        return novaVenda;
     }
 
     public List<SalesData> getSalesDataForMonth(int month) {
@@ -63,6 +68,16 @@ public class VendaService {
                 .collect(Collectors.toList());
     }
 
+    public List<Venda> listarVendas() {
+        return vendaRepository.findAll();
+    }
+
+    public List<Venda> listarVendasPorData(LocalDateTime startDate, LocalDateTime endDate) {
+        return vendaRepository.findAll().stream()
+                .filter(venda -> !venda.getDataVenda().isBefore(startDate) && !venda.getDataVenda().isAfter(endDate))
+                .collect(Collectors.toList());
+    }
+
     public List<ProdutoQuantidade> listarItensMaisVendidos() {
         Map<Long, Integer> vendasAgrupadas = vendaRepository.findAll().stream()
                 .collect(Collectors.groupingBy(Venda::getProdutoId, Collectors.summingInt(Venda::getQuantidade)));
@@ -77,16 +92,6 @@ public class VendaService {
                 })
                 .filter(Objects::nonNull)
                 .sorted((pq1, pq2) -> Integer.compare(pq2.getQuantidade(), pq1.getQuantidade()))
-                .collect(Collectors.toList());
-    }
-
-    public List<Venda> listarVendas() {
-        return vendaRepository.findAll();
-    }
-
-    public List<Venda> listarVendasPorData(LocalDateTime startDate, LocalDateTime endDate) {
-        return vendaRepository.findAll().stream()
-                .filter(venda -> !venda.getDataVenda().isBefore(startDate) && !venda.getDataVenda().isAfter(endDate))
                 .collect(Collectors.toList());
     }
 

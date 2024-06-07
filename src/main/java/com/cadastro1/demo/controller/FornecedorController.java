@@ -1,6 +1,5 @@
 package com.cadastro1.demo.controller;
 
-
 import com.cadastro1.demo.model.Fornecedor;
 import com.cadastro1.demo.service.FornecedorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,20 +41,13 @@ public class FornecedorController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Fornecedor> atualizarFornecedor(@PathVariable Long id, @RequestBody Fornecedor fornecedor) {
-        if (!fornecedorService.buscarPorId(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        fornecedor.setId(id);
-        Fornecedor fornecedorAtualizado = fornecedorService.salvar(fornecedor);
+        Fornecedor fornecedorAtualizado = fornecedorService.atualizarFornecedor(id, fornecedor);
         return ResponseEntity.ok(fornecedorAtualizado);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deletarFornecedor(@PathVariable Long id) {
-        if (!fornecedorService.buscarPorId(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
         fornecedorService.deletar(id);
         return ResponseEntity.noContent().build();
     }

@@ -35,6 +35,4 @@ public class LogController {
         List<Log> logs = logService.listarLogsPorData(start, end);
         return ResponseEntity.ok(logs);
     }
-
-
 }

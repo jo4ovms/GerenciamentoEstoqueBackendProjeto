@@ -23,7 +23,6 @@ public class ProdutoController {
         return ResponseEntity.ok(produtos);
     }
 
-
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Produto> criarProduto(@RequestBody Produto produto) {
@@ -49,11 +48,7 @@ public class ProdutoController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id, @RequestBody Produto produto) {
-        if (!produtoService.buscarPorId(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        produto.setId(id);
-        Produto produtoAtualizado = produtoService.salvar(produto);
+        Produto produtoAtualizado = produtoService.atualizarProduto(id, produto);
         return ResponseEntity.ok(produtoAtualizado);
     }
 
@@ -66,8 +61,6 @@ public class ProdutoController {
         produtoService.deletar(id);
         return ResponseEntity.noContent().build();
     }
-    
-
 
     @GetMapping("/fora-de-estoque")
     public ResponseEntity<List<Produto>> listarProdutosForaDeEstoque() {
@@ -80,6 +73,4 @@ public class ProdutoController {
         List<Produto> produtos = produtoService.listarProdutosAdequados(5);
         return ResponseEntity.ok(produtos);
     }
-
-
 }

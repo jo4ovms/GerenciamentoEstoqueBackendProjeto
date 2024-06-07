@@ -1,12 +1,10 @@
 package com.cadastro1.demo.service;
 
 import com.cadastro1.demo.model.Fornecedor;
-import com.cadastro1.demo.model.Log;
 import com.cadastro1.demo.repository.FornecedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,10 +20,24 @@ public class FornecedorService {
     public Fornecedor salvar(Fornecedor fornecedor) {
         boolean isNew = (fornecedor.getId() == null);
         Fornecedor savedFornecedor = fornecedorRepository.save(fornecedor);
-        String action = isNew ? "CREATE" : "UPDATE";
-        String logMessage = isNew ? "Fornecedor criado: " : "Fornecedor atualizado: ";
-        logService.salvar(new Log("Fornecedor", action, logMessage + savedFornecedor.getNome(), LocalDateTime.now()));
+        if (isNew) {
+            logService.logCreateFornecedor(savedFornecedor);
+        } else {
+            logService.logUpdateFornecedor(fornecedor, savedFornecedor);
+        }
         return savedFornecedor;
+    }
+
+    public Fornecedor atualizarFornecedor(Long id, Fornecedor novoFornecedor) {
+        Optional<Fornecedor> optionalOldFornecedor = fornecedorRepository.findById(id);
+        if (optionalOldFornecedor.isPresent()) {
+            Fornecedor oldFornecedor = optionalOldFornecedor.get();
+            logService.logUpdateFornecedor(oldFornecedor, novoFornecedor);
+            novoFornecedor.setId(id); // Ensure the ID is set for the update
+            return fornecedorRepository.save(novoFornecedor);
+        } else {
+            throw new RuntimeException("Fornecedor não encontrado");
+        }
     }
 
     public List<Fornecedor> listar() {
@@ -39,6 +51,6 @@ public class FornecedorService {
     public void deletar(Long id) {
         Fornecedor fornecedor = fornecedorRepository.findById(id).orElseThrow();
         fornecedorRepository.deleteById(id);
-        logService.salvar(new Log("Fornecedor", "DELETE", "Fornecedor deletado: " + fornecedor.getNome(), LocalDateTime.now()));
+        logService.logDeleteFornecedor(fornecedor);
     }
 }

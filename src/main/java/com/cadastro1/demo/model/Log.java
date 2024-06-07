@@ -1,12 +1,10 @@
 package com.cadastro1.demo.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDateTime;
 
+import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
@@ -29,7 +27,6 @@ public class Log {
     @Column(nullable = false)
     private LocalDateTime timestamp;
 
-
     public Log() {
     }
 
@@ -39,5 +36,6 @@ public class Log {
         this.details = details;
         this.timestamp = timestamp;
     }
-    // Getters and Setters
+
+    // Getters and setters
 }
