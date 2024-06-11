@@ -33,4 +33,15 @@ public class ExcelController {
 
         return ResponseEntity.ok().headers(headers).contentType(MediaType.parseMediaType("application/vnd.ms-excel")).body(new InputStreamResource(in));
     }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or hasRole('USER')")
+    @GetMapping("/fornecedores/export")
+    public ResponseEntity<InputStreamResource> exportFornecedoresToExcel() throws IOException {
+        ByteArrayInputStream in = excelService.exportFornecedoresToExcel();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=fornecedores.xlsx");
+
+        return ResponseEntity.ok().headers(headers).contentType(MediaType.parseMediaType("application/vnd.ms-excel")).body(new InputStreamResource(in));
+    }
 }

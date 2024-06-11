@@ -31,4 +31,15 @@ public class ExcelImportController {
             return ResponseEntity.status(500).body("Erro ao importar produtos: " + e.getMessage());
         }
     }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or hasRole('USER')")
+    @PostMapping("/fornecedores/import")
+    public ResponseEntity<String> importFornecedoresFromExcel(@RequestParam("file") MultipartFile file) {
+        try {
+            excelImportService.importFornecedoresFromExcel(file);
+            return ResponseEntity.ok("Fornecedores importados com sucesso!");
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body("Erro ao importar fornecedores: " + e.getMessage());
+        }
+    }
 }

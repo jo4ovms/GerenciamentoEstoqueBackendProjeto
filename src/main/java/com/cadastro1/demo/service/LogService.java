@@ -139,4 +139,35 @@ public class LogService {
                 produtoNome, venda.getQuantidade(), venda.getDataVenda().format(dateFormatter), venda.getDataVenda().format(timeFormatter));
         logRepository.save(new Log("Venda: " + produtoNome, "VENDIDO", details, LocalDateTime.now()));
     }
+
+    public void logExportProdutos(List<Produto> produtos) {
+        String details = String.format("Exportação de produtos: Total de produtos exportados: %s;", produtos.size());
+        logRepository.save(new Log("Produto", "EXPORT", details, LocalDateTime.now()));
+    }
+
+    // Log de Importação de Produtos
+    public void logImportProdutos(List<Produto> produtos) {
+        StringBuilder details = new StringBuilder();
+        details.append(String.format("Importação de produtos: Total de produtos importados: %s;", produtos.size()));
+        produtos.forEach(produto -> details.append(String.format(" Produto: %s;", produto.getNome())));
+        logRepository.save(new Log("Produto", "IMPORT", details.toString(), LocalDateTime.now()));
+    }
+
+    public void logExportFornecedores(List<Fornecedor> fornecedores) {
+        StringBuilder details = new StringBuilder("Fornecedores exportados: ");
+        for (Fornecedor fornecedor : fornecedores) {
+            details.append(String.format("%s (ID: %d); ", fornecedor.getNome(), fornecedor.getId()));
+        }
+        logRepository.save(new Log("Fornecedores", "EXPORT", details.toString(), LocalDateTime.now()));
+    }
+
+    public void logImportFornecedores(List<Fornecedor> fornecedores) {
+        StringBuilder details = new StringBuilder("Fornecedores importados: ");
+        for (Fornecedor fornecedor : fornecedores) {
+            details.append(String.format("%s (ID: %d); ", fornecedor.getNome(), fornecedor.getId()));
+        }
+        logRepository.save(new Log("Fornecedores", "IMPORT", details.toString(), LocalDateTime.now()));
+    }
+
+
 }
