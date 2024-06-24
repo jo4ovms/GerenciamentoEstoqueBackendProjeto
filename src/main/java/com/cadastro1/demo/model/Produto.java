@@ -31,6 +31,5 @@ public class Produto {
     public String toString(){
         return nome;
     }
-    // Getters and Setters
-    // ...
+
 }

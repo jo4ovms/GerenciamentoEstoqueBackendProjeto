@@ -3,7 +3,6 @@ package com.cadastro1.demo.service;
 import com.cadastro1.demo.exceptions.InsufficientStockException;
 import com.cadastro1.demo.exceptions.ResourceNotFoundException;
 import com.cadastro1.demo.model.Produto;
-import com.cadastro1.demo.model.SalesData;
 import com.cadastro1.demo.model.Venda;
 import com.cadastro1.demo.repository.ProdutoRepository;
 import com.cadastro1.demo.repository.VendaRepository;
@@ -47,16 +46,6 @@ public class VendaService {
         return novaVenda;
     }
 
-    public List<SalesData> getSalesDataForMonth(int month) {
-        List<Venda> vendas = vendaRepository.findAll();
-
-        return vendas.stream()
-                .filter(venda -> venda.getDataVenda().getMonthValue() == month)
-                .collect(Collectors.groupingBy(venda -> venda.getDataVenda().getDayOfMonth()))
-                .entrySet().stream()
-                .map(entry -> new SalesData(entry.getKey(), entry.getValue().size()))
-                .collect(Collectors.toList());
-    }
 
     public List<Venda> listarVendasPorMes(int month) {
         YearMonth yearMonth = YearMonth.of(LocalDate.now().getYear(), month);
