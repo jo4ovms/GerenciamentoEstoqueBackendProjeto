@@ -56,7 +56,7 @@ public class ExcelService {
 
             workbook.write(out);
 
-            // Log the export action
+
             logService.logExportProdutos(produtos);
 
             return new ByteArrayInputStream(out.toByteArray());
@@ -91,7 +91,7 @@ public class ExcelService {
 
             workbook.write(out);
 
-            // Log the export action
+
             logService.logExportFornecedores(fornecedores);
 
             return new ByteArrayInputStream(out.toByteArray());

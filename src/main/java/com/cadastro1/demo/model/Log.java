@@ -1,10 +1,12 @@
 package com.cadastro1.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Entity
@@ -15,13 +17,16 @@ public class Log {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(nullable = false)
     private String entity;
 
+    @NotBlank
     @Column(nullable = false)
     private String action;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String details;
 
     @Column(nullable = false)
@@ -36,6 +41,4 @@ public class Log {
         this.details = details;
         this.timestamp = timestamp;
     }
-
-    // Getters and setters
 }

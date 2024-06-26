@@ -31,10 +31,10 @@ public class VendaService {
 
     public Venda registrarVenda(Venda venda) {
         Produto produto = produtoRepository.findById(venda.getProdutoId())
-                .orElseThrow(() -> new ResourceNotFoundException("Produto not found for this id :: " + venda.getProdutoId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com esse id :: " + venda.getProdutoId()));
 
         if (produto.getQuantidade() < venda.getQuantidade()) {
-            throw new InsufficientStockException("Insufficient stock for product :: " + produto.getNome());
+            throw new InsufficientStockException("Estoque insuficiente para o produto :: " + produto.getNome());
         }
 
         produto.setQuantidade(produto.getQuantidade() - venda.getQuantidade());

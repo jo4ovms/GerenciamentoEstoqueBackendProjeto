@@ -31,7 +31,7 @@ public class ProdutoService {
         if (optionalOldProduto.isPresent()) {
             Produto oldProduto = optionalOldProduto.get();
             logService.logUpdateProduto(oldProduto, novoProduto);
-            novoProduto.setId(id); // Ensure the ID is set for the update
+            novoProduto.setId(id);
             return produtoRepository.save(novoProduto);
         } else {
             throw new RuntimeException("Produto não encontrado");

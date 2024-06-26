@@ -47,7 +47,6 @@ public class ExcelImportService {
 
             produtoRepository.saveAll(produtos);
 
-            // Log the import action
             logService.logImportProdutos(produtos);
         }
     }
@@ -73,7 +72,7 @@ public class ExcelImportService {
 
             fornecedorRepository.saveAll(fornecedores);
 
-            // Log the import action
+
             logService.logImportFornecedores(fornecedores);
         }
     }

@@ -33,7 +33,7 @@ public class FornecedorService {
         if (optionalOldFornecedor.isPresent()) {
             Fornecedor oldFornecedor = optionalOldFornecedor.get();
             logService.logUpdateFornecedor(oldFornecedor, novoFornecedor);
-            novoFornecedor.setId(id); // Ensure the ID is set for the update
+            novoFornecedor.setId(id);
             return fornecedorRepository.save(novoFornecedor);
         } else {
             throw new RuntimeException("Fornecedor não encontrado");

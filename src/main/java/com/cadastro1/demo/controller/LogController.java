@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,15 +26,23 @@ public class LogController {
     @GetMapping
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<List<Log>> listarLogs() {
-        List<Log> logs = logService.listar();
-        return ResponseEntity.ok(logs);
+        try {
+            List<Log> logs = logService.listar();
+            return ResponseEntity.ok(logs);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao listar logs", e);
+        }
     }
 
     @GetMapping("/por-data")
     public ResponseEntity<List<Log>> listarLogsPorData(@RequestParam String startDate, @RequestParam String endDate) {
-        LocalDateTime start = LocalDate.parse(startDate).atStartOfDay();
-        LocalDateTime end = LocalDate.parse(endDate).atTime(23, 59, 59);
-        List<Log> logs = logService.listarLogsPorData(start, end);
-        return ResponseEntity.ok(logs);
+        try {
+            LocalDateTime start = LocalDate.parse(startDate).atStartOfDay();
+            LocalDateTime end = LocalDate.parse(endDate).atTime(23, 59, 59);
+            List<Log> logs = logService.listarLogsPorData(start, end);
+            return ResponseEntity.ok(logs);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro ao listar logs por data", e);
+        }
     }
 }

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -19,15 +21,23 @@ public class FornecedorController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Fornecedor> criarFornecedor(@RequestBody Fornecedor fornecedor) {
-        Fornecedor novoFornecedor = fornecedorService.salvar(fornecedor);
-        return ResponseEntity.ok(novoFornecedor);
+        try {
+            Fornecedor novoFornecedor = fornecedorService.salvar(fornecedor);
+            return ResponseEntity.ok(novoFornecedor);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro ao criar fornecedor", e);
+        }
     }
 
     @GetMapping
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<List<Fornecedor>> listarFornecedores() {
-        List<Fornecedor> fornecedores = fornecedorService.listar();
-        return ResponseEntity.ok(fornecedores);
+        try {
+            List<Fornecedor> fornecedores = fornecedorService.listar();
+            return ResponseEntity.ok(fornecedores);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao listar fornecedores", e);
+        }
     }
 
     @GetMapping("/{id}")
@@ -35,20 +45,28 @@ public class FornecedorController {
     public ResponseEntity<Fornecedor> buscarFornecedorPorId(@PathVariable Long id) {
         return fornecedorService.buscarPorId(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Fornecedor não encontrado"));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Fornecedor> atualizarFornecedor(@PathVariable Long id, @RequestBody Fornecedor fornecedor) {
-        Fornecedor fornecedorAtualizado = fornecedorService.atualizarFornecedor(id, fornecedor);
-        return ResponseEntity.ok(fornecedorAtualizado);
+        try {
+            Fornecedor fornecedorAtualizado = fornecedorService.atualizarFornecedor(id, fornecedor);
+            return ResponseEntity.ok(fornecedorAtualizado);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erro ao atualizar fornecedor", e);
+        }
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deletarFornecedor(@PathVariable Long id) {
-        fornecedorService.deletar(id);
-        return ResponseEntity.noContent().build();
+        try {
+            fornecedorService.deletar(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Erro ao deletar fornecedor", e);
+        }
     }
 }

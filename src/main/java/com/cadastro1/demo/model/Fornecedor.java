@@ -1,8 +1,14 @@
 package com.cadastro1.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
-
+@Getter
+@Setter
 @Entity
 @Table(name = "fornecedores")
 public class Fornecedor {
@@ -11,66 +17,29 @@ public class Fornecedor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    @Size(max = 100)
     @Column(nullable = false)
     private String nome;
 
+    @NotBlank
+    @Size(max = 15)
     @Column(nullable = false)
     private String telefone;
 
+    @NotBlank
+    @Email
+    @Size(max = 50)
     @Column(nullable = false)
     private String email;
 
+    @NotBlank
+    @Size(max = 50)
     @Column(nullable = false)
     private String tipoProduto;
 
+    @NotBlank
+    @Size(max = 20)
     @Column(nullable = false, unique = true)
     private String cnpj;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getTipoProduto() {
-        return tipoProduto;
-    }
-
-    public void setTipoProduto(String tipoProduto) {
-        this.tipoProduto = tipoProduto;
-    }
-
-    public String getCnpj() {
-        return cnpj;
-    }
-
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
-    }
 }
